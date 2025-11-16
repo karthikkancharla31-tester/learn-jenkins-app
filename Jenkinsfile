@@ -24,13 +24,15 @@ pipeline {
         }
         */
 
-        stage('Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
+        stage('Run Tests'){
+          parallel {
+            stage('Unit Tests') {
+                agent {
+                    docker {
+                        image 'node:18-alpine'
+                         reuseNode true
+                   }
+               }
 
             steps {
                 sh '''
@@ -57,6 +59,11 @@ pipeline {
                 '''
             }
         }
+
+            }
+        }
+
+
     }
 
     post {
