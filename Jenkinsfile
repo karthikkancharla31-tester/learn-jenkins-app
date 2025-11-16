@@ -90,7 +90,7 @@ pipeline {
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     //node_modules/.bin/netlify deploy --prod --dir=build --no-build
-                    node_modules/.bin/netlify deploy --prod --dir=playwright-report
+                    node_modules/.bin/netlify deploy --prod --dir=test-results
                 '''
             }
         }
