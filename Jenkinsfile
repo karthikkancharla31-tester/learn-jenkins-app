@@ -86,30 +86,33 @@ pipeline {
 
             steps {
                 sh '''
+                    echo "🌐 Installing Netlify CLI & jq..."
                     npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
 
-                    echo "🔗 Linking Netlify Site..."
-                    node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
+                    echo "🔗 Linking Netlify site..."
+                    npx netlify link --id $NETLIFY_SITE_ID
 
-                    #echo "🚀 Deploying to staging..."
-                    #node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
-                    #node_modules/.bin/node-jq -r .deploy-url deploy-output.json
-
-                    echo "🚀 Deploying to staging..."
+                    echo "🚀 Deploying to Netlify Staging..."
                     npx netlify deploy --dir=build --no-build --json > deploy-output.json
 
-                    echo "🔍 Extracting staging deploy URL"
-                    CI_ENVIRONMENT_URL =$(npx node-jq -r .deploy_url deploy-output.json)
-                    npx playwright test  --reporter=html
+                    echo "🔍 Extracting staging deploy URL..."
+                    CI_ENVIRONMENT_URL=$(npx node-jq -r .deploy_url deploy-output.json)
 
-                    echo "Staging URL: $CI_ENVIRONMENT_URL"
+                    echo "🌍 Staging URL: $CI_ENVIRONMENT_URL"
+
+                    echo "🧪 Running Staging E2E Tests..."
+                    npx playwright test --reporter=html
                 '''
             }
 
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
+                   // publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'deploy_staging', reportTitles: '', useWrapperFileDirectly: true])
+                   publishHTML([
+                        reportDir: 'playwright-report',
+                        reportFiles: 'index.html',
+                        reportName: 'Staging E2E'
+                    ])
                 }
             }
         }
