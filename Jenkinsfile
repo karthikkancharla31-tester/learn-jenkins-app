@@ -93,7 +93,7 @@ pipeline {
 
                     echo "🚀 Deploying to staging..."
                     node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
-                    node_modules/.bin/node-jq -r '.deploy-url' deploy-output.json
+                    node_modules/.bin/node-jq -r .deploy-url deploy-output.json
                 '''
             }
         }
