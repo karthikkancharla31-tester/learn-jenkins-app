@@ -146,27 +146,6 @@ pipeline {
         stage('Deploy prod') {
             agent {
                 docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-
-                    echo "🔗 Linking Netlify Site..."
-                    node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
-
-                    echo "🚀 Deploying to production..."
-                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
-                '''
-            }
-        }
-
-        stage('Prod E2E') {
-            agent {
-                docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
@@ -178,13 +157,22 @@ pipeline {
 
             steps {
                 sh '''
+                    node --version
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+
+                    echo "🔗 Linking Netlify Site..."
+                    node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
+
+                    echo "🚀 Deploying to production..."
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
                     npx playwright test  --reporter=html
                 '''
             }
 
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Prod E2E', reportTitles: '', useWrapperFileDirectly: true])
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Deploy_prod', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
         }
