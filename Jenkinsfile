@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-    docker {
-        image 'node:18-alpine'
-        args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-    }
-}
+    agent any
 
     environment {
         NETLIFY_SITE_ID = 'P59042090-3267-494b-b18e-adabba7046a3E'
