@@ -84,6 +84,10 @@ pipeline {
                 }
             }
 
+            environment {
+                 CI_ENVIRONMENT_URL='STAGIN_URL_TO_BE_SET'
+            }
+
             steps {
                 sh '''
                     echo "🌐 Installing Netlify CLI & jq..."
