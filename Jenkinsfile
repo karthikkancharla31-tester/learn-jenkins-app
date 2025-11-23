@@ -107,7 +107,7 @@ pipeline {
 
             post {
                 always {
-                   // publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'deploy_staging', reportTitles: '', useWrapperFileDirectly: true])
+                   //  publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'deploy_staging', reportTitles: '', useWrapperFileDirectly: true])
                    publishHTML([
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
