@@ -75,7 +75,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy Staging') {
             agent {
                 docker {
@@ -99,11 +99,11 @@ pipeline {
                     echo "🚀 Deploying to staging..."
                     npx netlify deploy --dir=build --no-build --json > deploy-output.json
 
-                    CI_ENVIRONMENT_URL =$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
-  
                     echo "🔍 Extracting staging deploy URL"
-                    
+                    CI_ENVIRONMENT_URL =$(npx node-jq -r .deploy_url deploy-output.json)
                     npx playwright test  --reporter=html
+
+                    echo "Staging URL: $CI_ENVIRONMENT_URL"
                 '''
             }
 
