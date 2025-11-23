@@ -92,7 +92,7 @@ pipeline {
                     node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
 
                     echo "🚀 Deploying to staging..."
-                    node_modules/.bin/netlify deploy --dir=build
+                    node_modules/.bin/netlify deploy --dir=build --no-build
                 '''
             }
         }
@@ -113,7 +113,7 @@ pipeline {
                     node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
 
                     echo "🚀 Deploying to production..."
-                    node_modules/.bin/netlify deploy --dir=build --prod
+                    node_modules/.bin/netlify deploy --dir=build --prod --no-build
                 '''
             }
         }
