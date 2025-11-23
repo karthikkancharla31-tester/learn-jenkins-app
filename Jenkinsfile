@@ -75,40 +75,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                 sh '''
-                    npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
-
-                    echo "🔗 Linking Netlify Site..."
-                    node_modules/.bin/netlify link --id $NETLIFY_SITE_ID
-
-                    #echo "🚀 Deploying to staging..."
-                    #node_modules/.bin/netlify deploy --dir=build --no-build --json > deploy-output.json
-                    #node_modules/.bin/node-jq -r .deploy-url deploy-output.json
-
-                    echo "🚀 Deploying to staging..."
-                    npx netlify deploy --dir=build --no-build --json > deploy-output.json
-  
-                    echo "🔍 Extracting staging deploy URL"
-                    npx node-jq -r .deploy_url deploy-output.json
-                '''
-                script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
-                }
-            }
-
-            
-        }
-
+        
         stage('Deploy Staging') {
             agent {
                 docker {
@@ -132,7 +99,7 @@ pipeline {
                     echo "🚀 Deploying to staging..."
                     npx netlify deploy --dir=build --no-build --json > deploy-output.json
 
-                    CI_ENVIRONMENT_URL =$(node-jq -r .deploy_url deploy-output.json)
+                    CI_ENVIRONMENT_URL =$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
   
                     echo "🔍 Extracting staging deploy URL"
                     
